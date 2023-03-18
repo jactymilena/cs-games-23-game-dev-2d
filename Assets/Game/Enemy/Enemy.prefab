@@ -124,3 +124,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eac70dc84baeb424495a9fdc5b168760, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waypointsTag: Waypoint
+  playerTag: Player
+  speed: 3
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  closeViewRange: 2
+  farViewRange: 5
+  farViewAngle: 40
+  _waypoints: []
