@@ -131,7 +131,7 @@ public class Enemy : EnemyManager
     bool ObjectDetected(Vector2 targetPosition)
     {
         Vector2 direction = ((Vector2)transform.position - targetPosition).normalized;
-        RaycastHit2D hit = Physics2D.CircleCast(targetPosition, _spriteRenderer.bounds.size.x / 2, direction, detectionLayer.value);
+        RaycastHit2D hit = Physics2D.CircleCast(targetPosition, _spriteRenderer.bounds.size.x / 2, direction);
 
         return !(hit.collider == null || hit.collider.CompareTag("Enemy"));
     }
