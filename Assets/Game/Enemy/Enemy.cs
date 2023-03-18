@@ -10,13 +10,15 @@ public class Enemy : EnemyManager
     [SerializeField] private float speed = 3f;
 
     [SerializeField] private LayerMask detectionLayer;
-    [SerializeField] private float viewRange = 4f;
+    [SerializeField] private float viewRange = 2.5f;
 
     private List<Transform> _waypoints;
     private int _currentWaypointsIndex = 0;
     private Transform _playerTarget;
     private Vector3 _target;
     private SpriteRenderer _spriteRenderer;
+
+    public Vector3 _lastDetectPosition;
 
     public new void Start()
     {
@@ -37,6 +39,7 @@ public class Enemy : EnemyManager
 
     private void FixedUpdate()
     {
+        Debug.DrawRay(transform.position, _target - transform.position, Color.red);
         transform.position = Vector3.MoveTowards(transform.position, _target, speed * Time.deltaTime);
     }
 
@@ -53,6 +56,24 @@ public class Enemy : EnemyManager
     public override bool CheckPlayerInArea()
     {
         return Physics2D.OverlapCircle(transform.position, viewRange, detectionLayer.value);
+    }
+
+    public override void InitSearch()
+    {
+        Debug.Log("INIT");
+        _lastDetectPosition = _playerTarget.position; ;
+    }
+
+    public override void Search()
+    {
+        const int radius = 2;
+        Vector3 randomPosInCircle = GetRandomPositionInCircle(_lastDetectPosition, radius); 
+        const float tolerance = 10e-6f;
+        if (Math.Abs(transform.position.x - _target.x) < tolerance
+            && Math.Abs(transform.position.y - _target.y) < tolerance)
+        {
+            _target = randomPosInCircle;
+        }
     }
 
     private void CheckWaypoints()
@@ -79,6 +100,8 @@ public class Enemy : EnemyManager
         transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * speed);
     }
 
+    // ======= fonctions utilitaires ==================
+
     private int GetRandomWaypointIndex()
     {
         List<int> indexes = Enumerable.Range(0, _waypoints.Count).ToList();
@@ -95,6 +118,11 @@ public class Enemy : EnemyManager
         return _currentWaypointsIndex;
     }
 
+    private Vector2 GetRandomPositionInCircle(Vector2 center, int radius)
+    {
+        return center + (UnityEngine.Random.insideUnitCircle * radius);
+    }
+
     bool ObjectDetected(Vector2 targetPosition)
     {
         Vector2 direction = ((Vector2)transform.position - targetPosition).normalized;
@@ -102,6 +130,8 @@ public class Enemy : EnemyManager
 
         return !(hit.collider == null || hit.collider.CompareTag("Enemy"));
     }
+
+    // ======= fonctions de debug ==================
 
     void OnDrawGizmos()
     {

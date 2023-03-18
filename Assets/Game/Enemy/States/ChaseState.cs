@@ -8,9 +8,7 @@ public class ChaseState : EnemyState
 
     public override void RunCurrentState()
     {
-        if (_enemyManager.CheckPlayerInArea())
-            _enemyManager.Chase();
-        else
-            RunNextState();
+        _enemyManager.NotifyObserverPlayerVisibility(_enemyManager.CheckPlayerInArea());
+        _enemyManager.Chase();
     }
 }

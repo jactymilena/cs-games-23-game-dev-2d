@@ -5,15 +5,16 @@ using UnityEngine;
 public abstract class EnemyState
 {
 	protected EnemyManager _enemyManager;
-	protected EnemyState nextState;
+	protected EnemyState _nextState;
 
 	public EnemyState NextState 
 	{
-		set => this.nextState = value;
+		set => this._nextState = value;
 	}
 
 	public EnemyState(EnemyManager manager) => this._enemyManager = manager;
 
 	public abstract void RunCurrentState();
-	public virtual void RunNextState() => _enemyManager.State = nextState;
+	public virtual void RunNextState() => _enemyManager.State = _nextState;
+	
 }

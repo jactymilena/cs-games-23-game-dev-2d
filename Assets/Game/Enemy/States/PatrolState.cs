@@ -5,7 +5,10 @@ public class PatrolState : EnemyState
     public override void RunCurrentState()
     {
         if (_enemyManager.CheckPlayerInArea())
-            RunNextState();
+        {
+            _enemyManager.InitChase();
+            //RunNextState();
+        }
         else
             _enemyManager.Patrol();
     }
