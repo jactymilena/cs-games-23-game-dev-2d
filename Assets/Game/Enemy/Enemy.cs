@@ -10,14 +10,14 @@ public class Enemy : EnemyManager
     [SerializeField] private float speed = 3f;
 
     [SerializeField] private LayerMask detectionLayer;
-    [SerializeField] private float viewRange = 2.5f;
+    [SerializeField] private float farViewRange = 5f;
+    [Range(0f, 360f)] [SerializeField] private float farViewAngle = 70f;
 
     private List<Transform> _waypoints;
     private int _currentWaypointsIndex = 0;
     private Transform _playerTarget;
     private Vector3 _target;
     private SpriteRenderer _spriteRenderer;
-
     public Vector3 _lastDetectPosition;
 
     public new void Start()
@@ -55,12 +55,17 @@ public class Enemy : EnemyManager
 
     public override bool CheckPlayerInArea()
     {
-        return Physics2D.OverlapCircle(transform.position, viewRange, detectionLayer.value);
+        if (Physics2D.OverlapCircle(transform.position, farViewRange, detectionLayer.value))
+        {
+            Vector2 directionToTarget = (_playerTarget.position - transform.position).normalized;
+            return (Vector2.Angle(transform.up, directionToTarget) <= farViewAngle / 2);
+        }
+
+        return false;
     }
 
     public override void InitSearch()
     {
-        Debug.Log("INIT");
         _lastDetectPosition = _playerTarget.position; ;
     }
 
@@ -135,7 +140,22 @@ public class Enemy : EnemyManager
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, viewRange);
+
+        
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, farViewRange);
+
+        Vector3 angl1 = DirFromAngl(-transform.eulerAngles.z, -farViewAngle * farViewRange);
+        Vector3 angl2 = DirFromAngl(-transform.eulerAngles.z, farViewAngle * farViewRange);
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(transform.position, transform.position + -angl1 * farViewRange);
+        Gizmos.DrawLine(transform.position, transform.position + -angl2 * farViewRange);
+    }
+
+    private Vector2 DirFromAngl(float eulerYm, float angleDegrees)
+    {
+        angleDegrees += eulerYm;
+        return new Vector2(Mathf.Sin(angleDegrees * Mathf.Deg2Rad), Mathf.Cos(angleDegrees * Mathf.Deg2Rad));
     }
 }

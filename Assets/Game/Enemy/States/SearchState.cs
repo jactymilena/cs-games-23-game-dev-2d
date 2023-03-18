@@ -4,23 +4,27 @@ using UnityEngine;
 
 public class SearchState : EnemyState
 {
-    private float timer = 10;
+    [SerializeField] private float searchTime = 3.0f;
+    private float timer ;
 
-    public SearchState(EnemyManager manager) : base(manager) { }
+    public SearchState(EnemyManager manager) : base(manager)
+    {
+        timer = searchTime;
+    }
 
     public override void RunCurrentState()
     {
         if (_enemyManager.CheckPlayerInArea())
         {
-            timer = 10;
-            _enemyManager.RedirectToChaseState();
+            timer = searchTime;
+            _enemyManager.InitChase();
         }
         else
         {
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
-                timer = 10;
+                timer = searchTime;
                 RunNextState();
             }
             else

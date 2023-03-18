@@ -15,7 +15,7 @@ public class EnemiesManager : MonoBehaviour
         _managers = GameObject.FindGameObjectsWithTag(enemyTag).Select(x => x.GetComponent<EnemyManager>()).ToList();
         foreach (var manager in _managers)
         {
-            _visibilities.Add(manager.GetInstanceID(), true);
+            _visibilities.Add(manager.GetInstanceID(), false);
         }
     }
 
@@ -31,9 +31,11 @@ public class EnemiesManager : MonoBehaviour
     
     public void NotifyStartChase(int instanceID) 
     {
+        Debug.Log("NotifyStartChase");
         _visibilities[instanceID] = true;
         foreach (var manager in _managers)
         {
+            _visibilities[manager.GetInstanceID()] = true;
             manager.RedirectToChaseState();
         }
     }
@@ -42,6 +44,7 @@ public class EnemiesManager : MonoBehaviour
     {
         foreach (var manager in _managers)
         {
+            _visibilities[manager.GetInstanceID()] = false;
             manager.RedirectToSearchState();
         }
     }
