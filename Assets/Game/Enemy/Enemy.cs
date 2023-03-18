@@ -18,7 +18,7 @@ public class Enemy : EnemyManager
     private Transform _playerTarget;
     private Vector3 _target;
     private SpriteRenderer _spriteRenderer;
-    public Vector3 _lastDetectPosition;
+    private Vector3 _lastDetectPosition;
 
     public new void Start()
     {
@@ -58,7 +58,7 @@ public class Enemy : EnemyManager
         if (Physics2D.OverlapCircle(transform.position, farViewRange, detectionLayer.value))
         {
             Vector2 directionToTarget = (_playerTarget.position - transform.position).normalized;
-            return (Vector2.Angle(transform.up, directionToTarget) <= farViewAngle / 2);
+            return Vector2.Angle(transform.up, directionToTarget) <= farViewAngle / 2;
         }
 
         return false;
@@ -77,7 +77,7 @@ public class Enemy : EnemyManager
         if (Math.Abs(transform.position.x - _target.x) < tolerance
             && Math.Abs(transform.position.y - _target.y) < tolerance)
         {
-            _target = randomPosInCircle;
+            ChangeTarget(randomPosInCircle);
         }
     }
 

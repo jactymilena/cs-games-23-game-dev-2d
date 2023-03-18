@@ -1,22 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SearchState : EnemyState
 {
-    [SerializeField] private float searchTime = 3.0f;
+    private const float SearchTime = 3.0f;
     private float timer ;
 
     public SearchState(EnemyManager manager) : base(manager)
     {
-        timer = searchTime;
+        timer = SearchTime;
     }
 
     public override void RunCurrentState()
     {
         if (_enemyManager.CheckPlayerInArea())
         {
-            timer = searchTime;
+            timer = SearchTime;
             _enemyManager.InitChase();
         }
         else
@@ -24,7 +22,7 @@ public class SearchState : EnemyState
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
-                timer = searchTime;
+                timer = SearchTime;
                 RunNextState();
             }
             else
