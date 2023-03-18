@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Waypoint
+  - EnemiesManager
+  - Objects
   layers:
   - Default
   - TransparentFX
